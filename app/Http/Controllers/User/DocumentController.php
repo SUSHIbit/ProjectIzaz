@@ -10,12 +10,18 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
+    /**
+     * Display a listing of the documents for the authenticated user.
+     */
     public function index()
     {
         $documents = Auth::user()->documents()->latest()->paginate(10);
         return view('user.documents.index', compact('documents'));
     }
 
+    /**
+     * Display the specified document.
+     */
     public function show(Document $document)
     {
         // Ensure the document belongs to the authenticated user
@@ -27,12 +33,21 @@ class DocumentController extends Controller
         return view('user.documents.show', compact('document'));
     }
 
+    /**
+     * Upload a signed version of the document.
+     */
     public function uploadSigned(Request $request, Document $document)
     {
         // Ensure the document belongs to the authenticated user
         if ($document->user_id !== Auth::id()) {
             return redirect()->route('user.documents.index')
                 ->with('error', 'You do not have permission to upload to this document.');
+        }
+
+        // Ensure the document requires signature
+        if (!$document->requires_signature) {
+            return redirect()->route('user.documents.show', $document->id)
+                ->with('error', 'This document does not require a signature.');
         }
 
         $request->validate([
@@ -52,6 +67,6 @@ class DocumentController extends Controller
         ]);
 
         return redirect()->route('user.documents.show', $document->id)
-            ->with('success', 'Signed document uploaded successfully.');
+            ->with('success', 'Signed document uploaded successfully. It will be reviewed by the admin.');
     }
 }

@@ -10,25 +10,48 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
         $users = User::where('role', 'user')->get();
         return view('admin.documents.index', compact('users'));
     }
 
+    /**
+     * Display documents for a specific user.
+     */
     public function userDocuments(User $user)
     {
+        if ($user->role !== 'user') {
+            return redirect()->route('admin.documents.index')
+                ->with('error', 'You can only manage documents for users.');
+        }
+
         $documents = $user->documents()->latest()->paginate(10);
         return view('admin.documents.user_documents', compact('user', 'documents'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create(Request $request)
     {
         $userId = $request->user_id;
         $user = User::findOrFail($userId);
+        
+        if ($user->role !== 'user') {
+            return redirect()->route('admin.documents.index')
+                ->with('error', 'You can only add documents for users.');
+        }
+        
         return view('admin.documents.create', compact('user'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -37,6 +60,12 @@ class DocumentController extends Controller
             'document' => 'required|mimes:pdf|max:10240', // 10MB max
             'requires_signature' => 'boolean',
         ]);
+
+        $user = User::findOrFail($request->user_id);
+        if ($user->role !== 'user') {
+            return redirect()->route('admin.documents.index')
+                ->with('error', 'You can only add documents for users.');
+        }
 
         $filePath = $request->file('document')->store('documents', 'public');
 
@@ -52,30 +81,39 @@ class DocumentController extends Controller
             ->with('success', 'Document uploaded successfully');
     }
 
+    /**
+     * Display the specified resource.
+     */
     public function show(Document $document)
     {
         return view('admin.documents.show', compact('document'));
     }
 
+    /**
+     * Update the document status.
+     */
     public function updateStatus(Request $request, Document $document)
     {
         $request->validate([
-            'status' => 'required|in:pending,approved',
+            'status' => 'required|in:pending,approved,rejected',
         ]);
 
         $document->update([
             'status' => $request->status,
         ]);
 
-        return redirect()->route('admin.documents.user', $document->user_id)
+        return redirect()->route('admin.documents.show', $document->id)
             ->with('success', 'Document status updated successfully');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy(Document $document)
     {
         $userId = $document->user_id;
         
-        // Delete the file
+        // Delete the document file
         if ($document->file_path) {
             Storage::disk('public')->delete($document->file_path);
         }

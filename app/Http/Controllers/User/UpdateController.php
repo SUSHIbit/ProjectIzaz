@@ -9,12 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class UpdateController extends Controller
 {
+    /**
+     * Display a listing of the updates for the authenticated user.
+     */
     public function index()
     {
         $updates = Auth::user()->updates()->latest()->paginate(10);
         return view('user.updates.index', compact('updates'));
     }
 
+    /**
+     * Display the specified update.
+     */
     public function show(UserUpdate $update)
     {
         // Ensure the update belongs to the authenticated user

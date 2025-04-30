@@ -10,12 +10,18 @@ use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
+    /**
+     * Display a listing of the payments for the authenticated user.
+     */
     public function index()
     {
         $payments = Auth::user()->paymentItems()->latest()->paginate(10);
         return view('user.payments.index', compact('payments'));
     }
 
+    /**
+     * Upload a receipt for the payment item.
+     */
     public function uploadReceipt(Request $request, PaymentItem $paymentItem)
     {
         // Ensure the payment item belongs to the authenticated user
@@ -41,6 +47,6 @@ class PaymentController extends Controller
         ]);
 
         return redirect()->route('user.payments.index')
-            ->with('success', 'Receipt uploaded successfully.');
+            ->with('success', 'Receipt uploaded successfully. It will be reviewed by the admin.');
     }
 }
