@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminMiddleware
+class RedirectBasedOnRole
 {
     /**
      * Handle an incoming request.
@@ -16,15 +16,15 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
-            return redirect()->route('login')
-                ->with('error', 'You must be logged in to access this page.');
-        }
-
-        if (!Auth::user()->isAdmin()) {
-            // If user is logged in but not admin, redirect to user dashboard
-            return redirect()->route('user.dashboard')
-                ->with('error', 'You do not have permission to access the admin area.');
+        if (Auth::check()) {
+            // Check if the route is /dashboard (default redirect after login)
+            if ($request->is('dashboard')) {
+                if (Auth::user()->isAdmin()) {
+                    return redirect()->route('admin.dashboard');
+                } else {
+                    return redirect()->route('user.dashboard');
+                }
+            }
         }
 
         return $next($request);

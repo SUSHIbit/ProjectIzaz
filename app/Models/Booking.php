@@ -22,6 +22,16 @@ class Booking extends Model
         'notes',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'booking_date' => 'date',
+        'preferred_time' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

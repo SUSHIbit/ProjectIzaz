@@ -18,7 +18,7 @@
                     <x-auth-session-status class="mb-4" :status="session('status')" />
                     
                     <form method="POST" action="{{ route('login') }}">
-                        @csrf
+                        @csrf <!-- CSRF Token - Crucial for preventing 419 errors -->
 
                         <!-- Email Address -->
                         <div>

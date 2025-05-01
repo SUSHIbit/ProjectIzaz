@@ -1,5 +1,4 @@
 <?php
-// app/Providers/RouteServiceProvider.php - Update the HOME constant
 
 namespace App\Providers;
 
@@ -14,11 +13,12 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * The path to your application's "home" route.
      *
-     * Typically, users are redirected here after authentication.
+     * This is used by Laravel authentication to redirect users after login.
+     * We'll handle the actual redirection in the middleware.
      *
      * @var string
      */
-    public const HOME = '/user/dashboard'; // Changed from '/dashboard' to match the prefixed route
+    public const HOME = '/dashboard';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.

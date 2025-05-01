@@ -11,6 +11,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'email',
@@ -18,16 +23,47 @@ class User extends Authenticatable
         'role',
     ];
 
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
+    /**
+     * Check if the user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if the user is a regular user.
+     *
+     * @return bool
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
+    // Relationships
     public function bookings()
     {
         return $this->hasMany(Booking::class);
@@ -51,15 +87,5 @@ class User extends Authenticatable
     public function feedback()
     {
         return $this->hasMany(Feedback::class);
-    }
-
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
-
-    public function isUser()
-    {
-        return $this->role === 'user';
     }
 }
