@@ -26,4 +26,9 @@ class Service extends Model
     {
         return $this->hasMany(Booking::class);
     }
+    
+    public function images()
+    {
+        return $this->hasMany(ServiceImage::class)->orderBy('display_order');
+    }
 }

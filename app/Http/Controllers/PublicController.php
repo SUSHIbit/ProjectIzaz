@@ -26,10 +26,25 @@ class PublicController extends Controller
         return view('public.services', compact('services'));
     }
 
+    public function serviceDetail(Service $service)
+    {
+        $availabilities = $service->availabilities()
+            ->orderBy('day_of_week')
+            ->orderBy('start_time')
+            ->get();
+            
+        return view('public.service-detail', compact('service', 'availabilities'));
+    }
+
     public function portfolio()
     {
         $portfolio = PortfolioProject::with('images')->latest()->paginate(9);
         return view('public.portfolio', compact('portfolio'));
+    }
+
+    public function portfolioDetail(PortfolioProject $project)
+    {
+        return view('public.portfolio-detail', compact('project'));
     }
 
     public function about()

@@ -21,7 +21,9 @@ use Illuminate\Support\Facades\Route;
 // Public routes (Guest role)
 Route::get('/', [PublicController::class, 'index'])->name('home');
 Route::get('/services', [PublicController::class, 'services'])->name('services');
+Route::get('/services/{service}', [PublicController::class, 'serviceDetail'])->name('service.detail');
 Route::get('/portfolio', [PublicController::class, 'portfolio'])->name('portfolio');
+Route::get('/portfolio/{project}', [PublicController::class, 'portfolioDetail'])->name('portfolio.detail');
 Route::get('/about', [PublicController::class, 'about'])->name('about');
 Route::get('/feedback', [PublicController::class, 'feedback'])->name('feedback');
 
@@ -33,6 +35,16 @@ Route::get('/feedback', [PublicController::class, 'feedback'])->name('feedback')
 
 // Auth routes (handled by Laravel Breeze)
 require __DIR__.'/auth.php';
+
+// Fallback dashboard route that redirects based on user role
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        if (auth()->user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('dashboard'); // This is the named route for /user/dashboard
+    });
+});
 
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
@@ -76,6 +88,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('feedback', AdminFeedbackController::class, ['as' => 'admin']);
     Route::post('/feedback/{feedback}/approve', [AdminFeedbackController::class, 'approve'])->name('admin.feedback.approve');
     
+    Route::delete('/services/images/{image}', [AdminServiceController::class, 'removeImage'])->name('admin.services.images.destroy');
+
     // Team Management
     Route::resource('team', TeamController::class, ['as' => 'admin']);
 });
@@ -114,3 +128,4 @@ Route::prefix('user')->middleware(['auth', 'user'])->group(function () {
     Route::get('/feedback/create', [UserFeedbackController::class, 'create'])->name('user.feedback.create');
     Route::post('/feedback', [UserFeedbackController::class, 'store'])->name('user.feedback.store');
 });
+

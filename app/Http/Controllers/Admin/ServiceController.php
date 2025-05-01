@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Models\ServiceAvailability;
+use App\Models\ServiceImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,12 +29,13 @@ class ServiceController extends Controller
             'description' => 'required|string',
             'estimated_price' => 'required|numeric|min:0',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'additional_info' => 'nullable|string',
         ]);
 
         $imagePath = $request->file('image')->store('services', 'public');
 
-        Service::create([
+        $service = Service::create([
             'title' => $request->title,
             'description' => $request->description,
             'estimated_price' => $request->estimated_price,
@@ -41,17 +43,33 @@ class ServiceController extends Controller
             'additional_info' => $request->additional_info,
         ]);
 
+        // Handle additional images
+        if ($request->hasFile('additional_images')) {
+            $displayOrder = 0;
+            foreach ($request->file('additional_images') as $image) {
+                $imagePath = $image->store('services/images', 'public');
+                
+                ServiceImage::create([
+                    'service_id' => $service->id,
+                    'image_path' => $imagePath,
+                    'display_order' => $displayOrder++,
+                ]);
+            }
+        }
+
         return redirect()->route('admin.services.index')
             ->with('success', 'Service created successfully');
     }
 
     public function show(Service $service)
     {
+        $service->load('images');
         return view('admin.services.show', compact('service'));
     }
 
     public function edit(Service $service)
     {
+        $service->load('images');
         return view('admin.services.edit', compact('service'));
     }
 
@@ -62,6 +80,7 @@ class ServiceController extends Controller
             'description' => 'required|string',
             'estimated_price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'additional_info' => 'nullable|string',
         ]);
 
@@ -84,15 +103,38 @@ class ServiceController extends Controller
 
         $service->update($data);
 
+        // Handle additional images
+        if ($request->hasFile('additional_images')) {
+            $displayOrder = $service->images()->max('display_order') + 1 ?? 0;
+            
+            foreach ($request->file('additional_images') as $image) {
+                $imagePath = $image->store('services/images', 'public');
+                
+                ServiceImage::create([
+                    'service_id' => $service->id,
+                    'image_path' => $imagePath,
+                    'display_order' => $displayOrder++,
+                ]);
+            }
+        }
+
         return redirect()->route('admin.services.index')
             ->with('success', 'Service updated successfully');
     }
 
     public function destroy(Service $service)
     {
-        // Delete the image
+        // Delete the main image
         if ($service->image_path) {
             Storage::disk('public')->delete($service->image_path);
+        }
+        
+        // Delete all associated service images
+        foreach ($service->images as $image) {
+            if ($image->image_path) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+            $image->delete();
         }
         
         $service->delete();
@@ -137,5 +179,20 @@ class ServiceController extends Controller
 
         return redirect()->route('admin.services.availability', $serviceId)
             ->with('success', 'Availability removed successfully');
+    }
+    
+    public function removeImage(ServiceImage $image)
+    {
+        $serviceId = $image->service_id;
+        
+        // Delete the image file
+        if ($image->image_path) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+        
+        $image->delete();
+
+        return redirect()->route('admin.services.edit', $serviceId)
+            ->with('success', 'Image removed successfully');
     }
 }
