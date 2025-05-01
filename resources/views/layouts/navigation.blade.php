@@ -60,7 +60,7 @@
                                 {{ __('Team') }}
                             </x-nav-link>
                         @else
-                            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            <x-nav-link :href="route('user.dashboard')" :active="request()->routeIs('user.dashboard')">
                                 {{ __('Dashboard') }}
                             </x-nav-link>
                             <x-nav-link :href="route('user.services.index')" :active="request()->routeIs('user.services*')">
@@ -187,7 +187,7 @@
                         {{ __('Team') }}
                     </x-responsive-nav-link>
                 @else
-                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-responsive-nav-link :href="route('user.dashboard')" :active="request()->routeIs('user.dashboard')">
                         {{ __('Dashboard') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('user.services.index')" :active="request()->routeIs('user.services*')">
