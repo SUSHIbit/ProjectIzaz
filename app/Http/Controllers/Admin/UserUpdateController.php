@@ -60,7 +60,7 @@ class UserUpdateController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'images' => 'required|array|min:1|max:10',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
             'image_descriptions' => 'required|array|min:1|max:10',
             'image_descriptions.*' => 'nullable|string|max:255',
         ]);
@@ -71,26 +71,37 @@ class UserUpdateController extends Controller
                 ->with('error', 'You can only add updates for users.');
         }
 
-        $update = UserUpdate::create([
-            'user_id' => $request->user_id,
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
+        try {
+            // Create the update record
+            $update = UserUpdate::create([
+                'user_id' => $request->user_id,
+                'title' => $request->title,
+                'description' => $request->description,
+            ]);
 
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $imagePath = $image->store('updates', 'public');
-                
-                UpdateImage::create([
-                    'user_update_id' => $update->id,
-                    'image_path' => $imagePath,
-                    'description' => $request->image_descriptions[$index] ?? null,
-                ]);
+            // Handle image uploads if files were provided
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $image) {
+                    $imagePath = $image->store('updates', 'public');
+                    
+                    UpdateImage::create([
+                        'user_update_id' => $update->id,
+                        'image_path' => $imagePath,
+                        'description' => $request->image_descriptions[$index] ?? null,
+                    ]);
+                }
             }
-        }
 
-        return redirect()->route('admin.updates.user', $request->user_id)
-            ->with('success', 'Project update created successfully');
+            return redirect()->route('admin.updates.user', $request->user_id)
+                ->with('success', 'Project update created successfully');
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Error creating project update: ' . $e->getMessage());
+            
+            return redirect()->back()
+                ->with('error', 'Failed to create the project update. Please try again.')
+                ->withInput();
+        }
     }
 
     /**
