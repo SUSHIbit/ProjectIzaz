@@ -43,7 +43,7 @@
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">{{ $booking->booking_date->format('M d, Y') }}</div>
+                                                <div class="text-sm text-gray-900">{{ $booking->booking_date instanceof \DateTime ? $booking->booking_date->format('M d, Y') : date('M d, Y', strtotime($booking->booking_date)) }}</div>
                                                 <div class="text-sm text-gray-500">{{ date('g:i A', strtotime($booking->preferred_time)) }}</div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">

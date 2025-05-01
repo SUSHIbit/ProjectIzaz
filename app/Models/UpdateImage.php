@@ -12,9 +12,10 @@ class UpdateImage extends Model
     protected $fillable = [
         'user_update_id',
         'image_path',
+        'description',
     ];
-
-    public function update()
+    
+    public function updateRelation()
     {
         return $this->belongsTo(UserUpdate::class, 'user_update_id');
     }
