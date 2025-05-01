@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
+    /**
+     * Get or create a conversation for the authenticated user
+     */
     public function getUserConversation()
     {
         $user = Auth::user();
@@ -16,7 +19,7 @@ class ChatController extends Controller
         // Get or create a conversation for the user
         $conversation = Conversation::firstOrCreate(
             ['user_id' => $user->id, 'status' => 'open'],
-            ['admin_id' => 1] // hardcoded admin ID as requested
+            ['admin_id' => null] // We'll set admin_id when an admin responds
         );
         
         return response()->json([
@@ -24,6 +27,9 @@ class ChatController extends Controller
         ]);
     }
     
+    /**
+     * Get messages for a specific conversation
+     */
     public function getMessages($conversationId)
     {
         $user = Auth::user();
@@ -59,6 +65,9 @@ class ChatController extends Controller
         return response()->json($messages);
     }
     
+    /**
+     * Send a new message in the conversation
+     */
     public function sendMessage(Request $request)
     {
         $request->validate([
@@ -77,21 +86,30 @@ class ChatController extends Controller
             return response()->json(['error' => 'Conversation not found'], 404);
         }
         
-        // Create the message
-        $message = Message::create([
-            'conversation_id' => $conversation->id,
-            'sender_role' => 'user',
-            'message' => $request->message,
-        ]);
-        
-        return response()->json([
-            'success' => true,
-            'message' => [
-                'id' => $message->id,
-                'message' => $message->message,
-                'sent_by_me' => true,
-                'timestamp' => $message->created_at->diffForHumans(),
-            ]
-        ]);
+        try {
+            // Create the message
+            $message = Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_role' => 'user',
+                'message' => $request->message,
+                'is_read' => false,
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => [
+                    'id' => $message->id,
+                    'message' => $message->message,
+                    'sent_by_me' => true,
+                    'timestamp' => $message->created_at->diffForHumans(),
+                ]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error sending message: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to save message'
+            ], 500);
+        }
     }
 }

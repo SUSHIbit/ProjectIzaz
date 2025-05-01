@@ -20,9 +20,20 @@
     <!-- Chat Messages -->
     <div id="chat-messages" 
          class="p-4 h-80 overflow-y-auto space-y-4">
-        <div class="text-center text-sm text-gray-500">
-            Start a conversation with us!
-        </div>
+        <template x-if="messages.length === 0">
+            <div class="text-center text-sm text-gray-500">
+                Start a conversation with us!
+            </div>
+        </template>
+        
+        <template x-for="message in messages" :key="message.id">
+            <div :class="message.sent_by_me ? 'flex justify-end' : 'flex justify-start'">
+                <div :class="message.sent_by_me ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'" class="rounded-lg px-4 py-2 max-w-[75%]">
+                    <p x-text="message.message"></p>
+                    <div class="text-xs mt-1" x-text="message.timestamp"></div>
+                </div>
+            </div>
+        </template>
     </div>
     
     <!-- Chat Input -->
@@ -56,23 +67,37 @@ function chatBox() {
         },
         
         setupChatButton() {
-            document.getElementById('chat-button').addEventListener('click', () => {
-                document.getElementById('chat-box').classList.toggle('hidden');
-                if (!document.getElementById('chat-box').classList.contains('hidden')) {
-                    this.scrollToBottom();
-                    this.startPolling();
-                } else {
-                    this.stopPolling();
-                }
-            });
+            const chatButton = document.getElementById('chat-button');
+            if (chatButton) {
+                chatButton.addEventListener('click', () => {
+                    const chatBox = document.getElementById('chat-box');
+                    if (chatBox) {
+                        chatBox.classList.toggle('hidden');
+                        if (!chatBox.classList.contains('hidden')) {
+                            this.scrollToBottom();
+                            this.startPolling();
+                        } else {
+                            this.stopPolling();
+                        }
+                    }
+                });
+            }
         },
         
         getConversation() {
             fetch('/chat/conversation')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to get conversation');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     this.conversationId = data.conversation_id;
                     this.loadMessages();
+                })
+                .catch(error => {
+                    console.error('Error getting conversation:', error);
                 });
         },
         
@@ -80,15 +105,32 @@ function chatBox() {
             if (!this.conversationId) return;
             
             fetch(`/chat/messages/${this.conversationId}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load messages');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     this.messages = data;
                     this.scrollToBottom();
+                })
+                .catch(error => {
+                    console.error('Error loading messages:', error);
                 });
         },
         
         sendMessage() {
-            if (!this.newMessage.trim() || !this.conversationId) return;
+            if (!this.newMessage.trim() || !this.conversationId) {
+                if (!this.newMessage.trim()) {
+                    // Don't show error for empty message, just return
+                    return;
+                }
+                if (!this.conversationId) {
+                    alert('Unable to send message. Please refresh the page and try again.');
+                    return;
+                }
+            }
             
             const message = this.newMessage;
             this.newMessage = '';
@@ -104,12 +146,24 @@ function chatBox() {
                     message: message
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send message');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     this.messages.push(data.message);
                     this.scrollToBottom();
+                } else {
+                    // Handle error
+                    alert('Failed to send message: ' + (data.error || 'Unknown error'));
                 }
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
             });
         },
         
@@ -126,15 +180,20 @@ function chatBox() {
         scrollToBottom() {
             setTimeout(() => {
                 const chatMessages = document.getElementById('chat-messages');
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                if (chatMessages) {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
             }, 100);
         },
         
         minimizeChat() {
-            document.getElementById('chat-box').classList.add('hidden');
-            this.stopPolling();
+            const chatBox = document.getElementById('chat-box');
+            if (chatBox) {
+                chatBox.classList.add('hidden');
+                this.stopPolling();
+            }
         }
-    }
+    };
 }
 </script>
 @endauth

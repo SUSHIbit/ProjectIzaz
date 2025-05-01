@@ -16,6 +16,8 @@ use App\Http\Controllers\User\PaymentController as UserPaymentController;
 use App\Http\Controllers\User\UpdateController as UserUpdateController;
 use App\Http\Controllers\User\FeedbackController as UserFeedbackController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\Admin\AdminChatController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Booking;
 
