@@ -49,5 +49,13 @@
             {{ $slot }}
         </main>
     </div>
+    
+    <!-- Chat Components -->
+    @auth
+        @if(!Auth::user()->isAdmin())
+            <x-chat.button />
+            <x-chat.box />
+        @endif
+    @endauth
 </body>
 </html>

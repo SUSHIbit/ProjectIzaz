@@ -124,3 +124,19 @@ Route::prefix('user')->middleware(['auth', 'user'])->name('user.')->group(functi
     Route::get('/feedback/create', [UserFeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [UserFeedbackController::class, 'store'])->name('feedback.store');
 });
+
+// Chat routes for user
+Route::middleware(['auth', 'user'])->group(function () {
+    Route::get('/chat/conversation', [ChatController::class, 'getUserConversation']);
+    Route::get('/chat/messages/{conversation_id}', [ChatController::class, 'getMessages']);
+    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+});
+
+// Chat routes for admin
+Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
+    Route::get('/chat', [AdminChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/{id}', [AdminChatController::class, 'show'])->name('chat.show');
+    Route::get('/chat/{id}/messages', [AdminChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/chat/send', [AdminChatController::class, 'sendMessage'])->name('chat.send');
+    Route::post('/chat/{id}/close', [AdminChatController::class, 'closeConversation'])->name('chat.close');
+});

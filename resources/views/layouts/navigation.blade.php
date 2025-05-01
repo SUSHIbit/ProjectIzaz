@@ -59,6 +59,15 @@
                             <x-nav-link :href="route('admin.team.index')" :active="request()->routeIs('admin.team*')">
                                 {{ __('Team') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('admin.chat.index')" :active="request()->routeIs('admin.chat*')" class="relative">
+                                {{ __('Chat') }}
+                                @php
+                                    $unreadCount = \App\Models\Message::where('sender_role', 'user')
+                                        ->where('is_read', false)
+                                        ->count();
+                                @endphp
+                                <x-chat.unread-count :count="$unreadCount" />
+                            </x-nav-link>
                         @else
                             <x-nav-link :href="route('user.dashboard')" :active="request()->routeIs('user.dashboard')">
                                 {{ __('Dashboard') }}
@@ -185,6 +194,15 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.team.index')" :active="request()->routeIs('admin.team*')">
                         {{ __('Team') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.chat.index')" :active="request()->routeIs('admin.chat*')" class="relative">
+                        {{ __('Chat') }}
+                        @php
+                            $unreadCount = \App\Models\Message::where('sender_role', 'user')
+                                ->where('is_read', false)
+                                ->count();
+                        @endphp
+                        <x-chat.unread-count :count="$unreadCount" />
                     </x-responsive-nav-link>
                 @else
                     <x-responsive-nav-link :href="route('user.dashboard')" :active="request()->routeIs('user.dashboard')">
