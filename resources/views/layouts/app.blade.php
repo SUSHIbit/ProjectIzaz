@@ -50,9 +50,15 @@
                     <div class="hidden md:flex items-center space-x-3">
                         @auth
                             <span class="text-sm text-gray-700">{{ Auth::user()->name }}</span>
-                            <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-red-600">
-                                Dashboard
-                            </a>
+                            @if(Auth::user()->isAdmin())
+                                <a href="{{ route('admin.dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-red-600">
+                                    Dashboard
+                                </a>
+                            @else
+                                <a href="{{ route('user.dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-red-600">
+                                    Dashboard
+                                </a>
+                            @endif
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="text-sm text-gray-700 hover:text-red-600 font-medium">
@@ -89,7 +95,11 @@
                     <a href="{{ route('feedback') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('feedback') ? 'text-red-600 font-semibold' : '' }}">Feedback</a>
                     
                     @auth
-                        <a href="{{ route('dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600">Dashboard</a>
+                        @if(Auth::user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600">Dashboard</a>
+                        @else
+                            <a href="{{ route('user.dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600">Dashboard</a>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}" class="block">
                             @csrf
                             <button type="submit" class="w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600">
