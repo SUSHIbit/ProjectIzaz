@@ -1,8 +1,10 @@
+<!-- resources/views/public/service-detail.blade.php -->
 <x-app-layout>
-    <div class="bg-blue-600 text-white">
+    <!-- Updated to RED header from blue -->
+    <section class="bg-red-600 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="flex items-center">
-                <a href="{{ route('services') }}" class="text-white hover:text-blue-200 mr-4">
+                <a href="{{ route('services') }}" class="text-white hover:text-red-200 mr-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
@@ -15,8 +17,9 @@
                 Estimated price: ${{ number_format($service->estimated_price, 2) }}
             </p>
         </div>
-    </div>
+    </section>
 
+    <!-- Rest of the content remains unchanged -->
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
@@ -81,11 +84,11 @@
                         
                         <div class="mt-8">
                             @auth
-                                <a href="{{ route('user.bookings.create', $service->id) }}" class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-md font-semibold text-base text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                <a href="{{ route('user.bookings.create', $service->id) }}" class="inline-flex items-center px-6 py-3 bg-red-600 border border-transparent rounded-md font-semibold text-base text-white uppercase tracking-widest hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
                                     Book Now
                                 </a>
                             @else
-                                <a href="{{ route('login') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-md font-semibold text-base text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                                <a href="{{ route('login') }}" class="inline-flex items-center px-6 py-3 bg-red-600 border border-transparent rounded-md font-semibold text-base text-white uppercase tracking-widest hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
                                     Login to Book
                                 </a>
                             @endauth
@@ -94,7 +97,7 @@
                 </div>
                 
                 <div class="mt-10 pt-6 border-t border-gray-200">
-                    <a href="{{ route('services') }}" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                    <a href="{{ route('services') }}" class="inline-flex items-center text-red-600 hover:text-red-800">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
@@ -104,19 +107,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Image gallery functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const mainImage = document.getElementById('mainImage');
-            const thumbnails = document.querySelectorAll('.thumbnail-image');
-            
-            thumbnails.forEach(thumbnail => {
-                thumbnail.addEventListener('click', function() {
-                    const imageUrl = this.getAttribute('data-image');
-                    mainImage.querySelector('img').src = imageUrl;
-                });
-            });
-        });
-    </script>
 </x-app-layout>

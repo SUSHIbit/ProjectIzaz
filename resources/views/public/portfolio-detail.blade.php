@@ -1,8 +1,10 @@
+<!-- resources/views/public/portfolio-detail.blade.php -->
 <x-app-layout>
-    <div class="bg-blue-600 text-white">
+    <!-- Updated blue to red -->
+    <section class="bg-red-600 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="flex items-center">
-                <a href="{{ route('portfolio') }}" class="text-white hover:text-blue-200 mr-4">
+                <a href="{{ route('portfolio') }}" class="text-white hover:text-red-200 mr-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
@@ -15,7 +17,7 @@
                 Project completed in {{ $project->duration_days }} days.
             </p>
         </div>
-    </div>
+    </section>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -59,7 +61,7 @@
                 @endif
 
                 <div class="mt-10 pt-6 border-t border-gray-200">
-                    <a href="{{ route('portfolio') }}" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                    <a href="{{ route('portfolio') }}" class="inline-flex items-center text-red-600 hover:text-red-800">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
@@ -71,7 +73,7 @@
     </div>
 
     <script>
-        // Image gallery functionality
+        // Image gallery functionality - kept unchanged
         document.addEventListener('DOMContentLoaded', function() {
             const mainImage = document.getElementById('mainImage');
             const thumbnails = document.querySelectorAll('.thumbnail-image');

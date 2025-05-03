@@ -27,59 +27,53 @@
             @if($portfolio->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($portfolio as $project)
-                        <div class="group relative bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                            <div class="aspect-square overflow-hidden">
-                                @if($project->images->count() > 0)
-                                    <img src="{{ asset('storage/' . $project->images->first()->image_path) }}" alt="{{ $project->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                                @else
-                                    <div class="bg-gray-200 w-full h-full flex items-center justify-center">
-                                        <svg class="h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                @endif
-                                
-                                @if($project->images->count() > 1)
-                                    <div class="absolute top-3 right-3 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded-full">
-                                        {{ $project->images->count() }} Images
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $project->title }}</h3>
-                                <div class="flex flex-wrap gap-2 mt-2 mb-3">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        <svg class="mr-1.5 h-2 w-2 text-red-400" fill="currentColor" viewBox="0 0 8 8">
-                                            <circle cx="4" cy="4" r="3" />
-                                        </svg>
-                                        {{ $project->duration_days }} days
-                                    </span>
+                    <div class="group relative bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="aspect-square overflow-hidden">
+                            @if($project->images->count() > 0)
+                                <img src="{{ asset('storage/' . $project->images->first()->image_path) }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="bg-gray-200 w-full h-full flex items-center justify-center">
+                                    <svg class="h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
                                 </div>
-                                <p class="text-gray-600 text-sm">{{ Str::limit($project->description, 100) }}</p>
-                                
-                                @if($project->extra_info)
-                                    <div class="mt-3 text-xs text-gray-500">
-                                        <strong>Additional Info:</strong> {{ Str::limit($project->extra_info, 60) }}
-                                    </div>
-                                @endif
-                                
-                                <div class="mt-6 flex justify-end">
-                                    <a href="{{ route('portfolio.detail', $project->id) }}" class="inline-flex items-center text-red-600 hover:text-red-700">
-                                        View Project
-                                        <svg class="ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
+                            @endif
                             
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none p-6">
-                                <a href="{{ route('portfolio.detail', $project->id) }}" class="text-white font-medium group-hover:underline pointer-events-auto">
-                                    View Details
+                            @if($project->images->count() > 1)
+                                <div class="absolute top-3 right-3 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded-full">
+                                    {{ $project->images->count() }} Images
+                                </div>
+                            @endif
+                        </div>
+                        
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $project->title }}</h3>
+                            <div class="flex flex-wrap gap-2 mt-2 mb-3">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    <svg class="mr-1.5 h-2 w-2 text-red-400" fill="currentColor" viewBox="0 0 8 8">
+                                        <circle cx="4" cy="4" r="3" />
+                                    </svg>
+                                    {{ $project->duration_days }} days
+                                </span>
+                            </div>
+                            <p class="text-gray-600 text-sm">{{ Str::limit($project->description, 100) }}</p>
+                            
+                            @if($project->extra_info)
+                                <div class="mt-3 text-xs text-gray-500">
+                                    <strong>Additional Info:</strong> {{ Str::limit($project->extra_info, 60) }}
+                                </div>
+                            @endif
+                            
+                            <div class="mt-6 flex justify-end">
+                                <a href="{{ route('portfolio.detail', $project->id) }}" class="inline-flex items-center text-red-600 hover:text-red-700">
+                                    View Project
+                                    <svg class="ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
                                 </a>
                             </div>
                         </div>
+                    </div>
                     @endforeach
                 </div>
                 
