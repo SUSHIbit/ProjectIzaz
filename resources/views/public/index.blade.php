@@ -1,5 +1,5 @@
 <x-app-layout>
-    <!-- Hero Section with Background House Image -->
+    <!-- Hero Section with Background House Image - Unchanged -->
     <section class="relative bg-cover bg-center h-[600px]" style="background-image: url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');">
         <div class="absolute inset-0 bg-black bg-opacity-50"></div>
         <div class="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
@@ -22,7 +22,7 @@
         </div>
     </section>
 
-    <!-- Services Preview Section -->
+    <!-- Services Preview Section - Updated background to white -->
     <section class="py-16 bg-white">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="md:flex md:items-center md:justify-between md:space-x-12">
@@ -77,8 +77,8 @@
         </div>
     </section>
 
-    <!-- Portfolio Preview Section -->
-    <section class="py-16 bg-gray-50">
+    <!-- Portfolio Preview Section - Updated to light gray -->
+    <section class="py-16 bg-gray-100">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="md:flex md:items-center md:justify-between md:space-x-12 flex-row-reverse">
                 <div class="md:w-1/2 mb-10 md:mb-0">
@@ -129,7 +129,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                     </div>
-                                @endif
+                                    @endif
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <div class="text-white">
                                         <p class="font-medium">{{ $project->title }}</p>
@@ -152,8 +152,8 @@
         </div>
     </section>
 
-    <!-- Team Preview Section -->
-    <section class="py-16 bg-red-50">
+    <!-- Team Preview Section - Updated from red-50 to a more elegant gray-50 with red accents -->
+    <section class="py-16 bg-gray-50">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded mb-2">
@@ -180,7 +180,7 @@
                         </div>
                     @endforeach
                 @else
-                    <!-- Fallback content remains the same -->
+                    <!-- Fallback content if no team members exist -->
                 @endif
             </div>
     
@@ -195,8 +195,8 @@
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="py-16 bg-gray-50">
+    <!-- Testimonials Section - Updated to white background for clean look -->
+    <section class="py-16 bg-white">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded mb-2">
@@ -213,7 +213,7 @@
                     @if($feedback->count() > 0)
                         @foreach($feedback as $testimonial)
                             <div class="flex-shrink-0 w-full sm:w-80 md:w-96 snap-start">
-                                <div class="bg-white p-6 rounded-xl shadow-md h-full flex flex-col">
+                                <div class="bg-gray-50 p-6 rounded-xl shadow-md h-full flex flex-col">
                                     @if($testimonial->rating)
                                         <div class="flex text-yellow-400 mb-3">
                                             @for($i = 0; $i < $testimonial->rating; $i++)
@@ -230,7 +230,7 @@
                                     @endif
                                     <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $testimonial->title }}</h3>
                                     <p class="text-gray-600 mb-4 flex-grow">{{ Str::limit($testimonial->content, 150) }}</p>
-                                    <div class="flex items-center border-t border-gray-100 pt-4">
+                                    <div class="flex items-center border-t border-gray-200 pt-4">
                                         <div class="bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">
                                             <span class="text-gray-600 font-medium">{{ substr($testimonial->user->name, 0, 1) }}</span>
                                         </div>
@@ -244,7 +244,7 @@
                         @endforeach
                     @else
                         <div class="flex-shrink-0 w-full sm:w-80 md:w-96">
-                            <div class="bg-white p-6 rounded-xl shadow-md h-full">
+                            <div class="bg-gray-50 p-6 rounded-xl shadow-md h-full">
                                 <div class="flex text-yellow-400 mb-3">
                                     @for($i = 0; $i < 5; $i++)
                                         <svg class="h-5 w-5 fill-current" viewBox="0 0 20 20">
@@ -254,7 +254,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-900 mb-2">Exceptional Service</h3>
                                 <p class="text-gray-600 mb-4">The team was professional, efficient, and delivered beyond our expectations. Our kitchen renovation was completed on time and on budget.</p>
-                                <div class="flex items-center border-t border-gray-100 pt-4">
+                                <div class="flex items-center border-t border-gray-200 pt-4">
                                     <div class="bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">
                                         <span class="text-gray-600 font-medium">J</span>
                                     </div>
@@ -266,7 +266,7 @@
                             </div>
                         </div>
                         <div class="flex-shrink-0 w-full sm:w-80 md:w-96">
-                            <div class="bg-white p-6 rounded-xl shadow-md h-full">
+                            <div class="bg-gray-50 p-6 rounded-xl shadow-md h-full">
                                 <div class="flex text-yellow-400 mb-3">
                                     @for($i = 0; $i < 5; $i++)
                                         <svg class="h-5 w-5 fill-current" viewBox="0 0 20 20">
@@ -276,7 +276,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-900 mb-2">Highly Recommended</h3>
                                 <p class="text-gray-600 mb-4">I couldn't be happier with the bathroom renovation. The attention to detail and quality of work was outstanding.</p>
-                                <div class="flex items-center border-t border-gray-100 pt-4">
+                                <div class="flex items-center border-t border-gray-200 pt-4">
                                     <div class="bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">
                                         <span class="text-gray-600 font-medium">A</span>
                                     </div>
@@ -288,7 +288,7 @@
                             </div>
                         </div>
                         <div class="flex-shrink-0 w-full sm:w-80 md:w-96">
-                            <div class="bg-white p-6 rounded-xl shadow-md h-full">
+                            <div class="bg-gray-50 p-6 rounded-xl shadow-md h-full">
                                 <div class="flex text-yellow-400 mb-3">
                                     @for($i = 0; $i < 4; $i++)
                                         <svg class="h-5 w-5 fill-current" viewBox="0 0 20 20">
@@ -301,7 +301,7 @@
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-900 mb-2">Great Experience</h3>
                                 <p class="text-gray-600 mb-4">The team was professional and responsive throughout our home renovation project. Would use their services again.</p>
-                                <div class="flex items-center border-t border-gray-100 pt-4">
+                                <div class="flex items-center border-t border-gray-200 pt-4">
                                     <div class="bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">
                                         <span class="text-gray-600 font-medium">R</span>
                                     </div>
@@ -338,7 +338,7 @@
             </div>
         </div>
     </section>
-</section>
+</x-app-layout>
 
 <!-- JavaScript for Testimonial Carousel -->
 <script>
@@ -361,4 +361,3 @@
         }
     });
 </script>
-</x-app-layout>
