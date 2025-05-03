@@ -1,5 +1,6 @@
 <x-app-layout>
-    <div class="bg-blue-600 text-white">
+    <!-- Hero Section -->
+    <section class="bg-blue-600 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
                 {{ __('Login to Your Account') }}
@@ -8,7 +9,7 @@
                 Welcome back! Log in to access your services, bookings, and project updates.
             </p>
         </div>
-    </div>
+    </section>
 
     <div class="py-12">
         <div class="max-w-md mx-auto sm:px-6 lg:px-8">
@@ -18,7 +19,7 @@
                     <x-auth-session-status class="mb-4" :status="session('status')" />
                     
                     <form method="POST" action="{{ route('login') }}">
-                        @csrf <!-- CSRF Token - Crucial for preventing 419 errors -->
+                        @csrf
 
                         <!-- Email Address -->
                         <div>
@@ -32,9 +33,9 @@
                             <x-input-label for="password" :value="__('Password')" />
 
                             <x-text-input id="password" class="block mt-1 w-full"
-                                            type="password"
-                                            name="password"
-                                            required autocomplete="current-password" />
+                                          type="password"
+                                          name="password"
+                                          required autocomplete="current-password" />
 
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>

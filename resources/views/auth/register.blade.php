@@ -1,5 +1,6 @@
 <x-app-layout>
-    <div class="bg-blue-600 text-white">
+    <!-- Hero Section -->
+    <section class="bg-blue-600 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
                 {{ __('Create an Account') }}
@@ -8,7 +9,7 @@
                 Join us to access our home services, manage your bookings, and receive updates on your projects.
             </p>
         </div>
-    </div>
+    </section>
 
     <div class="py-12">
         <div class="max-w-md mx-auto sm:px-6 lg:px-8">
@@ -36,9 +37,9 @@
                             <x-input-label for="password" :value="__('Password')" />
 
                             <x-text-input id="password" class="block mt-1 w-full"
-                                            type="password"
-                                            name="password"
-                                            required autocomplete="new-password" />
+                                          type="password"
+                                          name="password"
+                                          required autocomplete="new-password" />
 
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
@@ -48,8 +49,8 @@
                             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
                             <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                                            type="password"
-                                            name="password_confirmation" required autocomplete="new-password" />
+                                          type="password"
+                                          name="password_confirmation" required autocomplete="new-password" />
 
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                         </div>

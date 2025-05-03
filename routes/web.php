@@ -43,6 +43,12 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+Route::middleware(['auth', 'user'])->group(function () {
+    Route::get('/user/dashboard', function () {
+        return view('user.dashboard');
+    })->name('user.dashboard');
+});
+
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     // Admin Dashboard with booking stats

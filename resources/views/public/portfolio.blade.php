@@ -99,7 +99,14 @@
     </section>
 
     <!-- Masonry Gallery Preview (Optional) -->
-    @if($portfolio->count() > 0 && $portfolio->flatMap->images->count() > 4)
+    @if($portfolio->count() > 0)
+    <?php
+    $imageCount = 0;
+    foreach ($portfolio as $project) {
+        $imageCount += $project->images->count();
+    }
+    ?>
+    @if($imageCount > 4)
     <section class="py-16 bg-gray-50">
         <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
@@ -110,7 +117,17 @@
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                @foreach($portfolio->flatMap->images->shuffle()->take(8) as $index => $image)
+                <?php 
+                $images = collect();
+                foreach ($portfolio as $project) {
+                    foreach ($project->images as $image) {
+                        $images->push($image);
+                    }
+                }
+                $images = $images->shuffle()->take(8);
+                ?>
+                
+                @foreach($images as $index => $image)
                     <div class="{{ $index % 5 == 0 ? 'col-span-2 row-span-2' : '' }} overflow-hidden rounded-lg shadow-md">
                         <img src="{{ asset('storage/' . $image->image_path) }}" alt="Gallery image" class="w-full h-full object-cover">
                     </div>
@@ -118,6 +135,7 @@
             </div>
         </div>
     </section>
+    @endif
     @endif
 
     <!-- CTA Section -->
