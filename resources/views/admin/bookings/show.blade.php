@@ -4,7 +4,7 @@
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 bg-white border-b border-gray-200">
+            <div class="p-6 text-gray-900">
                 <!-- Back Button -->
                 <div class="mb-6">
                     <a href="{{ route('admin.bookings.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 active:bg-gray-400 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
@@ -20,17 +20,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 mb-4">Client Information</h3>
-                            <p class="mb-2"><span class="font-semibold">Name:</span> {{ $booking->user->name }}</p>
-                            <p class="mb-2"><span class="font-semibold">Email:</span> {{ $booking->user->email }}</p>
-                            <p class="mb-2"><span class="font-semibold">Phone:</span> {{ $booking->user->phone ?? 'N/A' }}</p>
+                            <p class="mb-2"><span class="font-semibold">Name:</span> {{ $booking->name }}</p>
+                            <p class="mb-2"><span class="font-semibold">Email:</span> {{ $booking->email }}</p>
+                            <p class="mb-2"><span class="font-semibold">Phone:</span> {{ $booking->phone_number ?? 'N/A' }}</p>
                         </div>
                         
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 mb-4">Booking Information</h3>
-                            <p class="mb-2"><span class="font-semibold">Service:</span> {{ $booking->service }}</p>
+                            <p class="mb-2"><span class="font-semibold">Service:</span> {{ $booking->service->title }}</p>
                             <p class="mb-2"><span class="font-semibold">Title:</span> {{ $booking->title }}</p>
                             <p class="mb-2"><span class="font-semibold">Date:</span> {{ $booking->booking_date->format('F d, Y') }}</p>
-                            <p class="mb-2"><span class="font-semibold">Time:</span> {{ $booking->booking_time }}</p>
+                            <p class="mb-2"><span class="font-semibold">Time:</span> {{ date('g:i A', strtotime($booking->preferred_time)) }}</p>
                             <p class="mb-2">
                                 <span class="font-semibold">Status:</span> 
                                 @if($booking->status == 'pending')
@@ -87,8 +87,8 @@
                         </div>
                         
                         <div class="mb-4">
-                            <label for="admin_notes" class="block text-sm font-medium text-gray-700 mb-2">Admin Notes</label>
-                            <textarea id="admin_notes" name="admin_notes" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">{{ $booking->admin_notes }}</textarea>
+                            <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Admin Notes</label>
+                            <textarea id="notes" name="notes" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">{{ $booking->notes }}</textarea>
                             <p class="mt-1 text-sm text-gray-500">Add any notes about this booking (optional). These notes are only visible to administrators.</p>
                         </div>
                         

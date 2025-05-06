@@ -65,7 +65,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     
     // Booking Management
     Route::resource('bookings', AdminBookingController::class);
-    Route::post('/bookings/{booking}/status', [AdminBookingController::class, 'updateStatus'])->name('bookings.status');
+    Route::put('/bookings/{booking}/status', [AdminBookingController::class, 'updateStatus'])->name('bookings.updateStatus');
     
     // Document Management
     Route::get('/documents', [AdminDocumentController::class, 'index'])->name('documents.index');

@@ -20,14 +20,14 @@
                 </div>
 
                 <!-- Form for Editing Team Member -->
-                <form action="{{ route('admin.team.update', $teamMember->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="{{ route('admin.team.update', $team->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
                     @method('PUT')
                     
                     <!-- Name Field -->
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $teamMember->name) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                        <input type="text" name="name" id="name" value="{{ old('name', $team->name) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                         @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -36,7 +36,7 @@
                     <!-- Title Field -->
                     <div>
                         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                        <input type="text" name="title" id="title" value="{{ old('title', $teamMember->title) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                        <input type="text" name="title" id="title" value="{{ old('title', $team->title) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                         @error('title')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -45,7 +45,7 @@
                     <!-- Position Field -->
                     <div>
                         <label for="position" class="block text-sm font-medium text-gray-700 mb-1">Position</label>
-                        <input type="text" name="position" id="position" value="{{ old('position', $teamMember->position) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                        <input type="text" name="position" id="position" value="{{ old('position', $team->position) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                         @error('position')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -54,7 +54,7 @@
                     <!-- Display Order Field -->
                     <div>
                         <label for="display_order" class="block text-sm font-medium text-gray-700 mb-1">Display Order</label>
-                        <input type="number" name="display_order" id="display_order" value="{{ old('display_order', $teamMember->display_order) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                        <input type="number" name="display_order" id="display_order" value="{{ old('display_order', $team->display_order) }}" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
                         <p class="mt-1 text-sm text-gray-500">Lower numbers will be displayed first.</p>
                         @error('display_order')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -65,9 +65,9 @@
                     <div>
                         <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
                         <div class="mt-1 flex items-center">
-                            <div id="image-preview" class="mr-5 h-32 w-32 border-2 {{ $teamMember->image ? '' : 'border-dashed' }} border-gray-300 rounded-md flex items-center justify-center {{ $teamMember->image ? '' : 'hidden' }}">
-                                @if($teamMember->image)
-                                    <img id="preview" src="{{ asset('storage/' . $teamMember->image) }}" alt="Current Image" class="h-full w-full object-cover rounded-md">
+                            <div id="image-preview" class="mr-5 h-32 w-32 border-2 {{ $team->image ? '' : 'border-dashed' }} border-gray-300 rounded-md flex items-center justify-center {{ $team->image ? '' : 'hidden' }}">
+                                @if($team->image)
+                                    <img id="preview" src="{{ asset('storage/' . $team->image) }}" alt="Current Image" class="h-full w-full object-cover rounded-md">
                                 @else
                                     <img id="preview" src="#" alt="Image Preview" class="h-full w-full object-cover rounded-md">
                                 @endif
@@ -75,7 +75,7 @@
                             
                             <div id="upload-container" class="flex flex-col space-y-2">
                                 <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                    <span>{{ $teamMember->image ? 'Change image' : 'Upload a file' }}</span>
+                                    <span>{{ $team->image ? 'Change image' : 'Upload a file' }}</span>
                                     <input id="image" name="image" type="file" class="sr-only" accept="image/*" onchange="previewImage()">
                                 </label>
                                 <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
