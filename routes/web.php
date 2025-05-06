@@ -51,7 +51,6 @@ Route::middleware(['auth', 'user'])->group(function () {
 
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
-    // Admin Dashboard with booking stats
     Route::get('/dashboard', function () {
         // Get all bookings with eager loading for performance
         $bookings = Booking::with(['user', 'service'])->latest()->get();

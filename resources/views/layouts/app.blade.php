@@ -16,120 +16,93 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-white">
-        <!-- Sticky Header -->
-        <header class="sticky top-0 z-50 bg-white shadow-sm transition-all duration-200" id="header">
-            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <!-- Logo -->
-                    <div class="flex-shrink-0 flex items-center">
-                        <a href="{{ route('home') }}" class="flex items-center">
-                            <svg class="h-10 w-10 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                            </svg>
-                            <span class="ml-2 text-xl font-semibold text-gray-900">Home Services</span>
-                        </a>
-                    </div>
+        @auth
+            <!-- For authenticated users, redirect to the appropriate dashboard using sidebar layout -->
+            <script>
+                window.location.href = "{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('user.dashboard') }}";
+            </script>
+        @else
+            <!-- Sticky Header for guests only -->
+            <header class="sticky top-0 z-50 bg-white shadow-sm transition-all duration-200" id="header">
+                <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <!-- Logo -->
+                        <div class="flex-shrink-0 flex items-center">
+                            <a href="{{ route('home') }}" class="flex items-center">
+                                <svg class="h-10 w-10 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                                <span class="ml-2 text-xl font-semibold text-gray-900">Home Services</span>
+                            </a>
+                        </div>
 
-                    <!-- Navigation Links - Center -->
-                    <div class="hidden md:flex items-center justify-center flex-1 space-x-8">
-                        <a href="{{ route('services') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('services') ? 'text-red-600 font-semibold' : '' }}">
-                            Services
-                        </a>
-                        <a href="{{ route('portfolio') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('portfolio') ? 'text-red-600 font-semibold' : '' }}">
-                            Portfolio
-                        </a>
-                        <a href="{{ route('about') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('about') ? 'text-red-600 font-semibold' : '' }}">
-                            About Us
-                        </a>
-                        <a href="{{ route('feedback') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('feedback') ? 'text-red-600 font-semibold' : '' }}">
-                            Feedback
-                        </a>
-                    </div>
+                        <!-- Navigation Links - Center (for guests only) -->
+                        <div class="hidden md:flex items-center justify-center flex-1 space-x-8">
+                            <a href="{{ route('services') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('services') ? 'text-red-600 font-semibold' : '' }}">
+                                Services
+                            </a>
+                            <a href="{{ route('portfolio') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('portfolio') ? 'text-red-600 font-semibold' : '' }}">
+                                Portfolio
+                            </a>
+                            <a href="{{ route('about') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('about') ? 'text-red-600 font-semibold' : '' }}">
+                                About Us
+                            </a>
+                            <a href="{{ route('feedback') }}" class="text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('feedback') ? 'text-red-600 font-semibold' : '' }}">
+                                Feedback
+                            </a>
+                        </div>
 
-                    <!-- Auth Buttons - Right -->
-                    <div class="hidden md:flex items-center space-x-3">
-                        @auth
-                            <span class="text-sm text-gray-700">{{ Auth::user()->name }}</span>
-                            @if(Auth::user()->isAdmin())
-                                <a href="{{ route('admin.dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-red-600">
-                                    Dashboard
-                                </a>
-                            @else
-                                <a href="{{ route('user.dashboard') }}" class="text-sm font-medium text-gray-700 hover:text-red-600">
-                                    Dashboard
-                                </a>
-                            @endif
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="text-sm text-gray-700 hover:text-red-600 font-medium">
-                                    Logout
-                                </button>
-                            </form>
-                        @else
+                        <!-- Auth Buttons - Right (for guests only) -->
+                        <div class="hidden md:flex items-center space-x-3">
                             <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors">
                                 Login
                             </a>
                             <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg border border-transparent hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
                                 Register
                             </a>
-                        @endauth
-                    </div>
+                        </div>
 
-                    <!-- Mobile menu button -->
-                    <div class="md:hidden flex items-center">
-                        <button type="button" class="mobile-menu-button text-gray-700 hover:text-red-600 focus:outline-none" aria-label="Toggle menu">
-                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
+                        <!-- Mobile menu button (for guests) -->
+                        <div class="md:hidden flex items-center">
+                            <button type="button" class="mobile-menu-button text-gray-700 hover:text-red-600 focus:outline-none" aria-label="Toggle menu">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Mobile Menu -->
-            <div class="md:hidden mobile-menu hidden">
-                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
-                    <a href="{{ route('services') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('services') ? 'text-red-600 font-semibold' : '' }}">Services</a>
-                    <a href="{{ route('portfolio') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('portfolio') ? 'text-red-600 font-semibold' : '' }}">Portfolio</a>
-                    <a href="{{ route('about') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('about') ? 'text-red-600 font-semibold' : '' }}">About Us</a>
-                    <a href="{{ route('feedback') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('feedback') ? 'text-red-600 font-semibold' : '' }}">Feedback</a>
-                    
-                    @auth
-                        @if(Auth::user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600">Dashboard</a>
-                        @else
-                            <a href="{{ route('user.dashboard') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600">Dashboard</a>
-                        @endif
-                        <form method="POST" action="{{ route('logout') }}" class="block">
-                            @csrf
-                            <button type="submit" class="w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600">
-                                Logout
-                            </button>
-                        </form>
-                    @else
+                <!-- Mobile Menu for guests -->
+                <div class="md:hidden mobile-menu hidden">
+                    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
+                        <a href="{{ route('services') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('services') ? 'text-red-600 font-semibold' : '' }}">Services</a>
+                        <a href="{{ route('portfolio') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('portfolio') ? 'text-red-600 font-semibold' : '' }}">Portfolio</a>
+                        <a href="{{ route('about') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('about') ? 'text-red-600 font-semibold' : '' }}">About Us</a>
+                        <a href="{{ route('feedback') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600 {{ request()->routeIs('feedback') ? 'text-red-600 font-semibold' : '' }}">Feedback</a>
                         <a href="{{ route('login') }}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-red-600">Login</a>
                         <a href="{{ route('register') }}" class="mt-1 block px-3 py-2 text-base font-medium text-white bg-red-600 rounded-md hover:bg-red-700">Register</a>
-                    @endauth
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <!-- Flash Messages -->
-        @if (session('success'))
-            <div class="max-w-screen-xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
-                <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-md" role="alert">
-                    <p>{{ session('success') }}</p>
+            <!-- Flash Messages -->
+            @if (session('success'))
+                <div class="max-w-screen-xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
+                    <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-md" role="alert">
+                        <p>{{ session('success') }}</p>
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        @if (session('error'))
-            <div class="max-w-screen-xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
-                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
-                    <p>{{ session('error') }}</p>
+            @if (session('error'))
+                <div class="max-w-screen-xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
+                    <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-md" role="alert">
+                        <p>{{ session('error') }}</p>
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
+        @endauth
 
         <!-- Page Content -->
         <main>
@@ -214,14 +187,6 @@
             </div>
         </footer>
     </div>
-
-    <!-- Chat Components for authenticated users -->
-    @auth
-        @if(!Auth::user()->isAdmin())
-            <x-chat.button />
-            <x-chat.box />
-        @endif
-    @endauth
 
     <script>
         // Mobile menu toggle
