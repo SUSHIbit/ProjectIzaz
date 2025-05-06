@@ -17,10 +17,13 @@
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-white">
         @auth
-            <!-- For authenticated users, redirect to the appropriate dashboard using sidebar layout -->
+            <!-- CRITICAL FIX: Remove automatic redirect script -->
+            <!-- The script below was causing all navigation to break for authenticated users -->
+            {{-- 
             <script>
                 window.location.href = "{{ Auth::user()->isAdmin() ? route('admin.dashboard') : route('user.dashboard') }}";
             </script>
+            --}}
         @else
             <!-- Sticky Header for guests only -->
             <header class="sticky top-0 z-50 bg-white shadow-sm transition-all duration-200" id="header">
