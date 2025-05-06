@@ -40,13 +40,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('admin.dashboard');
         }
         return redirect()->route('user.dashboard');
-    });
-});
-
-Route::middleware(['auth', 'user'])->group(function () {
-    Route::get('/user/dashboard', function () {
-        return view('user.dashboard');
-    })->name('user.dashboard');
+    })->name('dashboard');
 });
 
 // Admin routes
@@ -66,7 +60,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     
     // Portfolio Management
     Route::resource('portfolio', AdminPortfolioController::class);
-    Route::post('/portfolio/{project}/images', [AdminPortfolioController::class, 'addImages'])->name('portfolio.images.store');
+    Route::post('/portfolio/{portfolio}/images', [AdminPortfolioController::class, 'addImages'])->name('portfolio.images.store');
     Route::delete('/portfolio/images/{image}', [AdminPortfolioController::class, 'removeImage'])->name('portfolio.images.destroy');
     
     // Booking Management
@@ -74,26 +68,50 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::post('/bookings/{booking}/status', [AdminBookingController::class, 'updateStatus'])->name('bookings.status');
     
     // Document Management
-    Route::resource('documents', AdminDocumentController::class);
+    Route::get('/documents', [AdminDocumentController::class, 'index'])->name('documents.index');
     Route::get('/documents/user/{user}', [AdminDocumentController::class, 'userDocuments'])->name('documents.user');
+    Route::get('/documents/create', [AdminDocumentController::class, 'create'])->name('documents.create');
+    Route::post('/documents', [AdminDocumentController::class, 'store'])->name('documents.store');
+    Route::get('/documents/{document}', [AdminDocumentController::class, 'show'])->name('documents.show');
     Route::post('/documents/{document}/status', [AdminDocumentController::class, 'updateStatus'])->name('documents.status');
+    Route::delete('/documents/{document}', [AdminDocumentController::class, 'destroy'])->name('documents.destroy');
     
     // Payment Management
-    Route::resource('payments', AdminPaymentController::class);
+    Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
     Route::get('/payments/user/{user}', [AdminPaymentController::class, 'userPayments'])->name('payments.user');
+    Route::get('/payments/create', [AdminPaymentController::class, 'create'])->name('payments.create');
+    Route::post('/payments', [AdminPaymentController::class, 'store'])->name('payments.store');
+    Route::get('/payments/{payment}', [AdminPaymentController::class, 'show'])->name('payments.show');
+    Route::post('/payments/{payment}/status', [AdminPaymentController::class, 'updateStatus'])->name('payments.status');
+    Route::delete('/payments/{payment}', [AdminPaymentController::class, 'destroy'])->name('payments.destroy');
     
     // User Update Management
-    Route::resource('updates', AdminUserUpdateController::class);
+    Route::get('/updates', [AdminUserUpdateController::class, 'index'])->name('updates.index');
     Route::get('/updates/user/{user}', [AdminUserUpdateController::class, 'userUpdates'])->name('updates.user');
+    Route::get('/updates/create', [AdminUserUpdateController::class, 'create'])->name('updates.create');
+    Route::post('/updates', [AdminUserUpdateController::class, 'store'])->name('updates.store');
+    Route::get('/updates/{update}', [AdminUserUpdateController::class, 'show'])->name('updates.show');
+    Route::get('/updates/{update}/edit', [AdminUserUpdateController::class, 'edit'])->name('updates.edit');
+    Route::put('/updates/{update}', [AdminUserUpdateController::class, 'update'])->name('updates.update');
+    Route::delete('/updates/{update}', [AdminUserUpdateController::class, 'destroy'])->name('updates.destroy');
     Route::post('/updates/{update}/images', [AdminUserUpdateController::class, 'addImages'])->name('updates.images.store');
     Route::delete('/updates/images/{image}', [AdminUserUpdateController::class, 'removeImage'])->name('updates.images.destroy');
     
     // Feedback Management
-    Route::resource('feedback', AdminFeedbackController::class);
+    Route::get('/feedback', [AdminFeedbackController::class, 'index'])->name('feedback.index');
+    Route::get('/feedback/{feedback}', [AdminFeedbackController::class, 'show'])->name('feedback.show');
     Route::post('/feedback/{feedback}/approve', [AdminFeedbackController::class, 'approve'])->name('feedback.approve');
+    Route::delete('/feedback/{feedback}', [AdminFeedbackController::class, 'destroy'])->name('feedback.destroy');
     
     // Team Management
     Route::resource('team', TeamController::class);
+    
+    // Chat Management
+    Route::get('/chat', [AdminChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/{id}', [AdminChatController::class, 'show'])->name('chat.show');
+    Route::get('/chat/{id}/messages', [AdminChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/chat/send', [AdminChatController::class, 'sendMessage'])->name('chat.send');
+    Route::post('/chat/{id}/close', [AdminChatController::class, 'closeConversation'])->name('chat.close');
 });
 
 // User routes
@@ -137,13 +155,4 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/chat/conversation', [ChatController::class, 'getUserConversation']);
     Route::get('/chat/messages/{conversation_id}', [ChatController::class, 'getMessages']);
     Route::post('/chat/send', [ChatController::class, 'sendMessage']);
-});
-
-// Chat routes for admin
-Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
-    Route::get('/chat', [AdminChatController::class, 'index'])->name('chat.index');
-    Route::get('/chat/{id}', [AdminChatController::class, 'show'])->name('chat.show');
-    Route::get('/chat/{id}/messages', [AdminChatController::class, 'getMessages'])->name('chat.messages');
-    Route::post('/chat/send', [AdminChatController::class, 'sendMessage'])->name('chat.send');
-    Route::post('/chat/{id}/close', [AdminChatController::class, 'closeConversation'])->name('chat.close');
 });
