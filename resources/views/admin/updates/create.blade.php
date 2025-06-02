@@ -31,6 +31,25 @@
                     </div>
 
                     <div class="mb-6">
+                        <x-input-label for="progress" :value="__('Progress Percentage')" />
+                        <div class="flex items-center">
+                            <x-text-input 
+                                id="progress" 
+                                class="block mt-1 w-24" 
+                                type="number" 
+                                name="progress" 
+                                :value="old('progress')" 
+                                min="0" 
+                                max="100" 
+                                placeholder="0"
+                            />
+                            <span class="ml-2 text-gray-600">%</span>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Enter a value between 0 and 100</p>
+                        <x-input-error :messages="$errors->get('progress')" class="mt-2" />
+                    </div>
+
+                    <div class="mb-6">
                         <x-input-label :value="__('Upload Images (Max 10)')" />
                         <p class="text-sm text-gray-500 mb-2">You can upload up to 10 images to show the project progress.</p>
                         

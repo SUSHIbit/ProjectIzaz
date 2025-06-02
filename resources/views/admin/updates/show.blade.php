@@ -19,27 +19,24 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
-                <div class="mb-8">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $update->title }}</h3>
-                    
-                    <div class="flex items-center text-sm text-gray-500 mb-4">
-                        <svg class="h-5 w-5 mr-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span>{{ $update->created_at->format('F d, Y') }}</span>
-                        
-                        <span class="mx-2">•</span>
-                        
-                        <svg class="h-5 w-5 mr-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span>For: {{ $update->user->name }}</span>
+                <div class="mb-6">
+                    <h3 class="text-lg font-medium text-gray-900">{{ $update->title }}</h3>
+                    <p class="mt-2 text-sm text-gray-500">Posted on {{ $update->created_at->format('F d, Y') }}</p>
+                </div>
+
+                @if($update->progress !== null)
+                <div class="mb-6">
+                    <h4 class="text-md font-medium text-gray-700 mb-2">Project Progress</h4>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ $update->progress }}%"></div>
                     </div>
-                    
-                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                        <h4 class="text-md font-medium text-gray-700 mb-2">Update Description</h4>
-                        <div class="text-gray-700 whitespace-pre-line">{{ $update->description }}</div>
-                    </div>
+                    <p class="mt-2 text-sm text-gray-600">{{ $update->progress }}% Complete</p>
+                </div>
+                @endif
+
+                <div class="mb-6">
+                    <h4 class="text-md font-medium text-gray-700 mb-2">Update Description</h4>
+                    <p class="text-gray-600 whitespace-pre-wrap">{{ $update->description }}</p>
                 </div>
                 
                 <div class="mb-8">
@@ -61,7 +58,7 @@
                             @foreach($update->images as $image)
                                 <div class="bg-white border rounded-lg overflow-hidden shadow-sm">
                                     <div class="relative aspect-video bg-gray-100">
-                                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Update image" class="w-full h-full object-cover">
+                                        <img src="{{ Storage::url($image->image_path) }}" alt="Update image" class="w-full h-full object-cover">
                                         <div class="absolute top-2 right-2">
                                             <form action="{{ route('admin.updates.images.destroy', $image->id) }}" method="POST">
                                                 @csrf

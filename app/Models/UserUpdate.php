@@ -13,6 +13,7 @@ class UserUpdate extends Model
         'user_id',
         'title',
         'description',
+        'progress',
     ];
 
     public function user()

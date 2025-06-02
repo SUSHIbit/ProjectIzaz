@@ -13,9 +13,21 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('role', 'user')->get();
+        $query = User::where('role', 'user')
+            ->with(['userDetails.service']);
+
+        // Search functionality
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                  ->orWhere('email', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        $users = $query->get();
         return view('admin.payments.index', compact('users'));
     }
 
@@ -58,6 +70,7 @@ class PaymentController extends Controller
             'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'payment_method' => 'required|in:cash,bank_loan',
         ]);
 
         $user = User::findOrFail($request->user_id);
@@ -70,6 +83,7 @@ class PaymentController extends Controller
             'user_id' => $request->user_id,
             'title' => $request->title,
             'price' => $request->price,
+            'payment_method' => $request->payment_method,
             'status' => 'pending',
         ]);
 

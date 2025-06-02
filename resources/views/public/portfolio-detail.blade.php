@@ -44,15 +44,15 @@
                     
                     <!-- Main Gallery Image -->
                     <div id="mainImage" class="w-full h-96 bg-gray-100 rounded-lg overflow-hidden mb-4">
-                        <img src="{{ asset('storage/' . $project->images->first()->image_path) }}" alt="{{ $project->title }}" class="w-full h-full object-contain">
+                        <img src="{{ Storage::url($project->images->first()->image_path) }}" alt="{{ $project->title }}" class="w-full h-full object-contain">
                     </div>
                     
                     <!-- Thumbnail Gallery -->
                     @if($project->images->count() > 1)
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         @foreach($project->images as $image)
-                        <div class="thumbnail-image cursor-pointer h-24 bg-gray-100 rounded-lg overflow-hidden" data-image="{{ asset('storage/' . $image->image_path) }}">
-                            <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $project->title }}" class="w-full h-full object-cover hover:opacity-75 transition-opacity">
+                        <div class="thumbnail-image cursor-pointer h-24 bg-gray-100 rounded-lg overflow-hidden" data-image="{{ Storage::url($image->image_path) }}">
+                            <img src="{{ Storage::url($image->image_path) }}" alt="{{ $project->title }}" class="w-full h-full object-cover hover:opacity-75 transition-opacity">
                         </div>
                         @endforeach
                     </div>

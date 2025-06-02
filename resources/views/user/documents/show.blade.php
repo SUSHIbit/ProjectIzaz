@@ -36,6 +36,8 @@
                                     <p class="text-base font-medium text-green-600">Approved</p>
                                 @elseif($document->status === 'rejected')
                                     <p class="text-base font-medium text-red-600">Rejected</p>
+                                @elseif($document->status === 'view_only')
+                                    <p class="text-base font-medium text-gray-600">View Only</p>
                                 @endif
                             </div>
                         </div>

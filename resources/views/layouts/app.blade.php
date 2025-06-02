@@ -21,6 +21,10 @@
             <x-admin-layout>
                 {{ $slot }}
             </x-admin-layout>
+        @elseif(Auth::user()->hasRole('lawyer'))
+            <x-lawyer-layout>
+                {{ $slot }}
+            </x-lawyer-layout>
         @else
             <x-user-layout>
                 {{ $slot }}

@@ -106,9 +106,10 @@ class ChatController extends Controller
             ]);
         } catch (\Exception $e) {
             \Log::error('Error sending message: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
-                'error' => 'Failed to save message'
+                'error' => 'Failed to save message: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -38,7 +38,10 @@
                             
                             @php
                                 $pendingPayments = $payments->where('status', 'pending')
-                                                           ->where('receipt_path', null);
+                                                           ->where('receipt_path', null)
+                                                           ->filter(function($payment) {
+                                                               return $payment->isCashPayment();
+                                                           });
                             @endphp
                             
                             @if($pendingPayments->count() > 0)
@@ -106,9 +109,15 @@
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     @if($payment->status === 'pending')
-                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                            Pending
-                                                        </span>
+                                                        @if($payment->isBankLoan())
+                                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                                Waiting for Lawyer
+                                                            </span>
+                                                        @else
+                                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                                Pending Payment
+                                                            </span>
+                                                        @endif
                                                     @elseif($payment->status === 'paid')
                                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                                             Under Review
@@ -121,21 +130,25 @@
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     @if($payment->receipt_path)
-                                                        <a href="{{ asset('storage/' . $payment->receipt_path) }}" target="_blank" class="text-blue-600 hover:text-blue-900">View Receipt</a>
+                                                        <a href="{{ Storage::url($payment->receipt_path) }}" target="_blank" class="text-blue-600 hover:text-blue-900">
+                                                            View {{ $payment->isBankLoan() ? 'Bank Loan' : 'Payment' }} Receipt
+                                                        </a>
                                                     @else
-                                                        <span class="text-gray-400">No Receipt</span>
+                                                        <span class="text-gray-500">No receipt</span>
                                                     @endif
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                     {{ $payment->created_at->format('M d, Y') }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    @if(!$payment->receipt_path && $payment->status === 'pending')
+                                                    @if($payment->isCashPayment())
                                                         <button type="button" 
                                                                 onclick="openUploadModal('{{ $payment->id }}', '{{ $payment->title }}', '{{ number_format($payment->price, 2) }}')" 
-                                                                class="text-indigo-600 hover:text-indigo-900">
+                                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                                             Upload Receipt
                                                         </button>
+                                                    @else
+                                                        <span class="text-gray-500">Waiting for lawyer to upload bank loan receipt</span>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -167,7 +180,9 @@
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
             <div class="px-6 py-4 border-b">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-medium text-gray-900">Upload Payment Receipt</h3>
+                    <h3 class="text-lg font-medium text-gray-900">
+                        Upload Payment Receipt
+                    </h3>
                     <button type="button" onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-500">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -185,8 +200,8 @@
                 <form id="receiptForm" method="POST" enctype="multipart/form-data">
                     @csrf
                     
-                    <div class="mb-4">
-                        <label for="receipt" class="block text-sm font-medium text-gray-700 mb-2">Upload Receipt Image</label>
+                    <div class="mb-6">
+                        <x-input-label for="receipt" :value="__('Upload Payment Receipt')" />
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                             <div class="space-y-1 text-center">
                                 <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -195,15 +210,17 @@
                                 <div class="flex text-sm text-gray-600">
                                     <label for="receipt" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
                                         <span>Upload a file</span>
-                                        <input id="receipt" name="receipt" type="file" class="sr-only" accept="image/*" required>
+                                        <input id="receipt" name="receipt" type="file" class="sr-only" accept="image/*,.pdf" required>
                                     </label>
                                     <p class="pl-1">or drag and drop</p>
                                 </div>
                                 <p class="text-xs text-gray-500">
-                                    PNG, JPG, GIF up to 2MB
+                                    PNG, JPG, GIF, PDF up to 2MB
                                 </p>
                             </div>
                         </div>
+                        <div id="file-name" class="mt-2 text-sm text-gray-600"></div>
+                        <x-input-error :messages="$errors->get('receipt')" class="mt-2" />
                         <div id="preview-container" class="mt-4 hidden">
                             <img id="preview-image" class="h-48 mx-auto object-contain" alt="Receipt preview">
                         </div>
@@ -227,11 +244,14 @@
         
         function openUploadModal(paymentId, title, amount) {
             currentPaymentId = paymentId;
+            
             document.getElementById('paymentTitle').textContent = title;
             document.getElementById('paymentAmount').textContent = '$' + amount;
+            
             document.getElementById('uploadModal').classList.remove('hidden');
             document.getElementById('preview-container').classList.add('hidden');
             document.getElementById('receipt').value = '';
+            document.getElementById('file-name').textContent = '';
         }
         
         function closeUploadModal() {
@@ -246,29 +266,37 @@
             const receiptInput = document.getElementById('receipt');
             
             if (!receiptInput.files || receiptInput.files.length === 0) {
-                alert('Please select an image to upload');
+                alert('Please select a file to upload');
                 return;
             }
             
-            // Set the form action dynamically
-            form.action = '/user/payments/' + currentPaymentId + '/receipt';
+            form.action = `/user/payments/${currentPaymentId}/receipt`;
             form.submit();
         }
         
-        // Preview image before upload
+        // Show file name and preview when selected
         document.getElementById('receipt').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) {
                 document.getElementById('preview-container').classList.add('hidden');
+                document.getElementById('file-name').textContent = '';
                 return;
             }
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('preview-image').src = e.target.result;
-                document.getElementById('preview-container').classList.remove('hidden');
+            // Show file name
+            document.getElementById('file-name').textContent = `Selected file: ${file.name}`;
+            
+            // Show preview for images
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-image').src = e.target.result;
+                    document.getElementById('preview-container').classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('preview-container').classList.add('hidden');
             }
-            reader.readAsDataURL(file);
         });
     </script>
 </x-app-layout>

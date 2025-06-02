@@ -88,7 +88,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         @foreach($portfolio->images as $image)
                             <div class="relative group rounded-lg overflow-hidden shadow-sm">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" alt="Project image" class="w-full aspect-video object-cover">
+                                <img src="{{ Storage::url($image->image_path) }}" alt="Project image" class="w-full aspect-video object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-end justify-start p-3 transition-all duration-200">
                                     <form action="{{ route('admin.portfolio.images.destroy', $image->id) }}" method="POST" class="hidden group-hover:block">
                                         @csrf

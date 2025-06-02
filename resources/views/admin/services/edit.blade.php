@@ -50,7 +50,7 @@
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Current Main Image</label>
                         <div class="mt-1 w-48 h-48 border border-gray-200 rounded-md overflow-hidden">
-                            <img src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
+                            <img src="{{ Storage::url($service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
                         </div>
                     </div>
 
@@ -89,7 +89,7 @@
                             @foreach($service->images as $image)
                             <div class="relative">
                                 <div class="w-full h-32 border border-gray-200 rounded-md overflow-hidden">
-                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
+                                    <img src="{{ Storage::url($image->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
                                 </div>
                                 <form action="{{ route('admin.services.images.destroy', $image->id) }}" method="POST" class="absolute top-0 right-0 mt-1 mr-1">
                                     @csrf

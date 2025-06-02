@@ -28,9 +28,9 @@
                         <!-- Main Service Image -->
                         <div id="mainImage" class="w-full h-96 bg-gray-100 rounded-lg overflow-hidden mb-4">
                             @if($service->images->count() > 0)
-                                <img src="{{ asset('storage/' . $service->images->first()->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
+                                <img src="{{ Storage::url($service->images->first()->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
                             @else
-                                <img src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
+                                <img src="{{ Storage::url($service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
                             @endif
                         </div>
                         
@@ -38,13 +38,13 @@
                         @if($service->images->count() > 1 || ($service->images->count() === 0 && $service->image_path))
                         <div class="grid grid-cols-5 gap-2">
                             @if($service->images->count() === 0 && $service->image_path)
-                                <div class="thumbnail-image cursor-pointer h-20 bg-gray-100 rounded overflow-hidden" data-image="{{ asset('storage/' . $service->image_path) }}">
-                                    <img src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover hover:opacity-75 transition-opacity">
+                                <div class="thumbnail-image cursor-pointer h-20 bg-gray-100 rounded overflow-hidden" data-image="{{ Storage::url($service->image_path) }}">
+                                    <img src="{{ Storage::url($service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover hover:opacity-75 transition-opacity">
                                 </div>
                             @else
                                 @foreach($service->images as $image)
-                                <div class="thumbnail-image cursor-pointer h-20 bg-gray-100 rounded overflow-hidden" data-image="{{ asset('storage/' . $image->image_path) }}">
-                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover hover:opacity-75 transition-opacity">
+                                <div class="thumbnail-image cursor-pointer h-20 bg-gray-100 rounded overflow-hidden" data-image="{{ Storage::url($image->image_path) }}">
+                                    <img src="{{ Storage::url($image->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover hover:opacity-75 transition-opacity">
                                 </div>
                                 @endforeach
                             @endif

@@ -70,7 +70,7 @@
                                             <div class="mt-4 flex space-x-3 overflow-auto">
                                                 @foreach($update->images as $image)
                                                     <div class="flex-shrink-0 w-24 h-24">
-                                                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Update image" class="w-full h-full object-cover rounded-md">
+                                                        <img src="{{ Storage::url($image->image_path) }}" alt="Update image" class="w-full h-full object-cover rounded-md">
                                                     </div>
                                                 @endforeach
                                             </div>

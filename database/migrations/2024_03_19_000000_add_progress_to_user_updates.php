@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_updates', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->text('description');
-            $table->timestamps();
+        Schema::table('user_updates', function (Blueprint $table) {
+            $table->integer('progress')->nullable()->after('description');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_updates');
+        Schema::table('user_updates', function (Blueprint $table) {
+            $table->dropColumn('progress');
+        });
     }
-};
+}; 

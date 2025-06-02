@@ -48,6 +48,10 @@
                         <a href="{{ route('user.documents.index') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg p-4 text-center transition">
                             <span class="block font-medium">Check Documents</span>
                         </a>
+                        <!-- New Loan Status Button -->
+                        <a href="{{ route('user.loan.status') }}" class="bg-pink-500 hover:bg-pink-600 text-white rounded-lg p-4 text-center transition">
+                            <span class="block font-medium">Loan Status</span>
+                        </a>
                     </div>
                 </div>
                 
@@ -59,7 +63,18 @@
                             @foreach(Auth::user()->updates()->latest()->take(3)->get() as $update)
                                 <div class="p-4">
                                     <h5 class="font-medium text-gray-900">{{ $update->title }}</h5>
-                                    <p class="text-sm text-gray-500 mt-1">{{ \Illuminate\Support\Str::limit($update->description, 150) }}</p>
+                                    @if($update->progress !== null)
+                                    <div class="mt-2">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-xs font-medium text-gray-700">Project Progress</span>
+                                            <span class="text-xs font-medium text-gray-700">{{ $update->progress }}%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: {{ $update->progress }}%"></div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                    <p class="text-sm text-gray-500 mt-2">{{ \Illuminate\Support\Str::limit($update->description, 150) }}</p>
                                     <div class="mt-2">
                                         <a href="{{ route('user.updates.show', $update->id) }}" class="text-sm text-blue-500 hover:underline">View Details →</a>
                                     </div>

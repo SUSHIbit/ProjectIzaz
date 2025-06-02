@@ -143,7 +143,14 @@
                             </svg>
                             My Documents
                         </a>
-                        
+
+                        <a href="{{ route('user.loan.status') }}" class="{{ request()->routeIs('user.loan.status') ? 'bg-red-50 text-red-600' : 'text-gray-700 hover:bg-gray-50 hover:text-red-600' }} group flex items-center px-4 py-2 text-sm font-medium rounded-md">
+                            <svg class="mr-3 h-5 w-5 {{ request()->routeIs('user.loan.status') ? 'text-red-500' : 'text-gray-500 group-hover:text-red-500' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Loan Status
+                        </a>
+
                         <a href="{{ route('user.payments.index') }}" class="{{ request()->routeIs('user.payments*') ? 'bg-red-50 text-red-600' : 'text-gray-700 hover:bg-gray-50 hover:text-red-600' }} group flex items-center px-4 py-2 text-sm font-medium rounded-md">
                             <svg class="mr-3 h-5 w-5 {{ request()->routeIs('user.payments*') ? 'text-red-500' : 'text-gray-500 group-hover:text-red-500' }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -277,7 +284,11 @@
                         <a href="{{ route('user.documents.index') }}" class="{{ request()->routeIs('user.documents*') ? 'bg-red-50 text-red-600 border-l-4 border-red-500' : 'text-gray-700 hover:bg-gray-50 hover:text-red-600' }} block pl-3 pr-4 py-2 text-base font-medium">
                             My Documents
                         </a>
-                        
+
+                        <a href="{{ route('user.loan.status') }}" class="{{ request()->routeIs('user.loan.status') ? 'bg-red-50 text-red-600 border-l-4 border-red-500' : 'text-gray-700 hover:bg-gray-50 hover:text-red-600' }} block pl-3 pr-4 py-2 text-base font-medium">
+                            Loan Status
+                        </a>
+
                         <a href="{{ route('user.payments.index') }}" class="{{ request()->routeIs('user.payments*') ? 'bg-red-50 text-red-600 border-l-4 border-red-500' : 'text-gray-700 hover:bg-gray-50 hover:text-red-600' }} block pl-3 pr-4 py-2 text-base font-medium">
                             Payments
                         </a>
@@ -337,7 +348,11 @@
                         @endif
 
                         <!-- THIS IS THE KEY PART - MAKE SURE TO RENDER THE SLOT HERE -->
-                        {{ $slot }}
+                        @if (isset($slot))
+                            {{ $slot }}
+                        @else
+                            @yield('content')
+                        @endif
                     </div>
                 </div>
             </main>

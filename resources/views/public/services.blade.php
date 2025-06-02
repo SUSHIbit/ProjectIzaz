@@ -29,7 +29,7 @@
                     @foreach($services as $service)
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                             <div class="aspect-video overflow-hidden">
-                                <img src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
+                                <img src="{{ Storage::url($service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
                             </div>
                             <div class="p-6">
                                 <div class="flex justify-between items-start mb-3">

@@ -18,7 +18,7 @@
                     <div class="bg-white border rounded-lg shadow overflow-hidden">
                         <div class="relative h-48">
                             @if($project->images->count() > 0)
-                                <img src="{{ asset('storage/' . $project->images->first()->image_path) }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
+                                <img src="{{ Storage::url($project->images->first()->image_path) }}" alt="{{ $project->title }}" class="w-full h-full object-cover">
                                 @if($project->images->count() > 1)
                                     <div class="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white text-xs rounded px-2 py-1">
                                         +{{ $project->images->count() - 1 }} more photos

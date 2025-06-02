@@ -24,7 +24,7 @@
                         <div>
                             <h3 class="text-lg font-medium text-gray-900">Main Image</h3>
                             <div class="mt-2 w-full h-64 border border-gray-200 rounded-md overflow-hidden">
-                                <img src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
+                                <img src="{{ Storage::url($service->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
                             </div>
                         </div>
                         
@@ -34,7 +34,7 @@
                             <div class="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
                                 @foreach($service->images as $image)
                                 <div class="w-full h-32 border border-gray-200 rounded-md overflow-hidden">
-                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
+                                    <img src="{{ Storage::url($image->image_path) }}" alt="{{ $service->title }}" class="w-full h-full object-cover">
                                 </div>
                                 @endforeach
                             </div>

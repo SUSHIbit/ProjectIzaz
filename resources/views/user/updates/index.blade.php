@@ -27,13 +27,25 @@
                                     </div>
                                     <div class="border-t border-gray-200">
                                         <div class="px-4 py-5 sm:p-6">
+                                            @if($update->progress !== null)
+                                            <div class="mb-4">
+                                                <div class="flex justify-between items-center mb-1">
+                                                    <span class="text-sm font-medium text-gray-700">Project Progress</span>
+                                                    <span class="text-sm font-medium text-gray-700">{{ $update->progress }}%</span>
+                                                </div>
+                                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $update->progress }}%"></div>
+                                                </div>
+                                            </div>
+                                            @endif
+                                            
                                             <p class="text-sm text-gray-700">{{ Str::limit($update->description, 200) }}</p>
                                             
                                             @if($update->images->count() > 0)
                                                 <div class="mt-4 flex space-x-3 overflow-auto">
                                                     @foreach($update->images->take(4) as $image)
                                                         <div class="flex-shrink-0 w-24 h-24">
-                                                            <img src="{{ asset('storage/' . $image->image_path) }}" alt="Update image" class="w-full h-full object-cover rounded-md">
+                                                            <img src="{{ Storage::url($image->image_path) }}" alt="Update image" class="w-full h-full object-cover rounded-md">
                                                         </div>
                                                     @endforeach
                                                     @if($update->images->count() > 4)

@@ -15,38 +15,54 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Auth::user()->paymentItems()->latest()->paginate(10);
+        $payments = auth()->user()->paymentItems()
+            ->latest()
+            ->paginate(10);
+
         return view('user.payments.index', compact('payments'));
     }
 
-    /**
-     * Upload a receipt for the payment item.
-     */
-    public function uploadReceipt(Request $request, PaymentItem $paymentItem)
+    public function uploadReceipt(Request $request, PaymentItem $payment)
     {
-        // Ensure the payment item belongs to the authenticated user
-        if ($paymentItem->user_id !== Auth::id()) {
-            return redirect()->route('user.payments.index')
-                ->with('error', 'You do not have permission to upload to this payment item.');
+        // Verify the payment belongs to the authenticated user
+        if ($payment->user_id !== auth()->id()) {
+            return redirect()->back()->with('error', 'Unauthorized access.');
+        }
+
+        // Verify this is a cash payment
+        if (!$payment->isCashPayment()) {
+            return redirect()->back()->with('error', 'You can only upload receipts for cash payments. Bank loan receipts must be uploaded by the lawyer.');
+        }
+
+        // Verify the payment is pending
+        if ($payment->status !== 'pending') {
+            return redirect()->back()->with('error', 'This payment is not pending.');
         }
 
         $request->validate([
-            'receipt' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'receipt' => 'required|file|mimes:jpeg,png,jpg,gif,pdf|max:2048'
         ]);
 
-        // Delete the old receipt if exists
-        if ($paymentItem->receipt_path) {
-            Storage::disk('public')->delete($paymentItem->receipt_path);
+        try {
+            // Delete existing receipt if any
+            if ($payment->receipt_path) {
+                Storage::delete($payment->receipt_path);
+            }
+
+            // Store the new receipt
+            $path = $request->file('receipt')->store('receipts', 'public');
+            
+            // Update payment status
+            $payment->update([
+                'receipt_path' => $path,
+                'status' => 'paid' // Change status to paid when receipt is uploaded
+            ]);
+
+            return redirect()->route('user.payments.index')
+                ->with('success', 'Payment receipt uploaded successfully. Waiting for admin verification.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Failed to upload receipt. Please try again.');
         }
-
-        $filePath = $request->file('receipt')->store('receipts', 'public');
-
-        $paymentItem->update([
-            'receipt_path' => $filePath,
-            'status' => 'paid',
-        ]);
-
-        return redirect()->route('user.payments.index')
-            ->with('success', 'Receipt uploaded successfully. It will be reviewed by the admin.');
     }
 }

@@ -21,6 +21,8 @@ class RedirectBasedOnRole
             if ($request->is('dashboard')) {
                 if (Auth::user()->isAdmin()) {
                     return redirect()->route('admin.dashboard');
+                } elseif (Auth::user()->hasRole('lawyer')) {
+                    return redirect()->route('lawyer.dashboard');
                 } else {
                     return redirect()->route('user.dashboard');
                 }

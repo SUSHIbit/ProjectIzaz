@@ -20,6 +20,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\Admin\AdminChatController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Booking;
+use App\Http\Controllers\ProfileController;
 
 // Public routes (Guest role)
 Route::get('/', [PublicController::class, 'index'])->name('home');
@@ -75,6 +76,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/documents/{document}', [AdminDocumentController::class, 'show'])->name('documents.show');
     Route::post('/documents/{document}/status', [AdminDocumentController::class, 'updateStatus'])->name('documents.status');
     Route::delete('/documents/{document}', [AdminDocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::get('/documents/{document}/download-signed', [AdminDocumentController::class, 'downloadSigned'])->name('documents.download_signed');
+    Route::post('/documents/bulk-store', [AdminDocumentController::class, 'bulkStore'])->name('documents.bulkStore');
     
     // Payment Management
     Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
@@ -112,6 +115,11 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/chat/{id}/messages', [AdminChatController::class, 'getMessages'])->name('chat.messages');
     Route::post('/chat/send', [AdminChatController::class, 'sendMessage'])->name('chat.send');
     Route::post('/chat/{id}/close', [AdminChatController::class, 'closeConversation'])->name('chat.close');
+    
+    // User Details Management (replacing Payment Types)
+    Route::get('/user-details', [App\Http\Controllers\Admin\UserDetailController::class, 'index'])->name('user-details.index');
+    Route::post('/user-details', [App\Http\Controllers\Admin\UserDetailController::class, 'store'])->name('user-details.store');
+    Route::delete('/user-details/{userDetail}', [App\Http\Controllers\Admin\UserDetailController::class, 'destroy'])->name('user-details.destroy');
 });
 
 // User routes
@@ -138,7 +146,7 @@ Route::prefix('user')->middleware(['auth', 'user'])->name('user.')->group(functi
     
     // Payments
     Route::get('/payments', [UserPaymentController::class, 'index'])->name('payments.index');
-    Route::post('/payments/{paymentItem}/receipt', [UserPaymentController::class, 'uploadReceipt'])->name('payments.receipt');
+    Route::post('/payments/{payment}/receipt', [UserPaymentController::class, 'uploadReceipt'])->name('payments.receipt');
     
     // Updates
     Route::get('/updates', [UserUpdateController::class, 'index'])->name('updates.index');
@@ -148,6 +156,9 @@ Route::prefix('user')->middleware(['auth', 'user'])->name('user.')->group(functi
     Route::get('/feedback', [UserFeedbackController::class, 'index'])->name('feedback.index');
     Route::get('/feedback/create', [UserFeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [UserFeedbackController::class, 'store'])->name('feedback.store');
+
+    // Loan Status
+    Route::get('/loan-status', [App\Http\Controllers\User\LoanStatusController::class, 'index'])->name('loan.status');
 });
 
 // Chat routes for user
@@ -155,4 +166,32 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/chat/conversation', [ChatController::class, 'getUserConversation']);
     Route::get('/chat/messages/{conversation_id}', [ChatController::class, 'getMessages']);
     Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+});
+
+// Lawyer Routes
+Route::middleware(['auth', 'role:lawyer'])->prefix('lawyer')->name('lawyer.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Lawyer\DashboardController::class, 'index'])->name('dashboard');
+    
+    // Document Routes
+    Route::get('/documents', [App\Http\Controllers\Lawyer\DocumentController::class, 'index'])->name('documents.index');
+    Route::get('/documents/{document}', [App\Http\Controllers\Lawyer\DocumentController::class, 'show'])->name('documents.show');
+    Route::post('/documents/{document}/sign', [App\Http\Controllers\Lawyer\DocumentController::class, 'sign'])->name('documents.sign');
+    
+    // Payment Routes
+    Route::get('/payments', [App\Http\Controllers\Lawyer\PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments/create', [App\Http\Controllers\Lawyer\PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/payments', [App\Http\Controllers\Lawyer\PaymentController::class, 'store'])->name('payments.store');
+    Route::get('/payments/{payment}', [App\Http\Controllers\Lawyer\PaymentController::class, 'show'])->name('payments.show');
+    Route::post('/payments/{payment}/receipt', [App\Http\Controllers\Lawyer\PaymentController::class, 'uploadReceipt'])->name('payments.receipt');
+
+    // Loan Status Routes
+    Route::get('/loan-status', [App\Http\Controllers\Lawyer\LoanStatusController::class, 'index'])->name('loan.status');
+    Route::post('/loan-status/{user}/update', [App\Http\Controllers\Lawyer\LoanStatusController::class, 'update'])->name('loan.status.update');
+});
+
+// Profile Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

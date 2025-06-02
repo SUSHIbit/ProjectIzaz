@@ -88,9 +88,8 @@
                                 <h4 class="text-lg font-medium mb-4">Verify Payment</h4>
                                 <p class="text-sm text-gray-600 mb-6">Update the status of this payment after reviewing the receipt.</p>
                                 
-                                <form method="POST" action="{{ route('admin.payments.update', $payment->id) }}">
+                                <form method="POST" action="{{ route('admin.payments.status', $payment->id) }}">
                                     @csrf
-                                    @method('PUT')
                                     
                                     <div class="mb-4">
                                         <x-input-label for="status" :value="__('Update Status')" />

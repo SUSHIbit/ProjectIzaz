@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -63,6 +64,17 @@ class User extends Authenticatable
         return $this->role === 'user';
     }
 
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
+
+    public const ROLES = [
+        'admin' => 'admin',
+        'user' => 'user',
+        'lawyer' => 'lawyer',
+    ];
+
     // Relationships
     public function bookings()
     {
@@ -92,5 +104,18 @@ class User extends Authenticatable
     public function conversations()
     {
         return $this->hasMany(Conversation::class);
+    }
+
+    /**
+     * Get the user details for the user.
+     */
+    public function userDetails(): HasMany
+    {
+        return $this->hasMany(UserDetail::class);
+    }
+
+    public function loanStatus()
+    {
+        return $this->hasOne(LoanStatus::class);
     }
 }

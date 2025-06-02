@@ -33,7 +33,7 @@
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex-shrink-0 h-16 w-16">
-                            <img class="h-16 w-16 object-cover rounded-md" src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->title }}">
+                            <img class="h-16 w-16 object-cover rounded-md" src="{{ Storage::url($service->image_path) }}" alt="{{ $service->title }}">
                         </div>
                     </td>
                     <td class="px-6 py-4">

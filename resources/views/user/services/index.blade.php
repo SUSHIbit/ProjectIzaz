@@ -13,7 +13,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach($services as $service)
                                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                                    <img src="{{ asset('storage/' . $service->image_path) }}" alt="{{ $service->title }}" class="w-full h-56 object-cover">
+                                    <img src="{{ Storage::url($service->image_path) }}" alt="{{ $service->title }}" class="w-full h-56 object-cover">
                                     <div class="p-6">
                                         <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $service->title }}</h3>
                                         <p class="text-gray-700 text-sm mb-4">{{ Str::limit($service->description, 100) }}</p>

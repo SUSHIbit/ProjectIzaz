@@ -30,6 +30,25 @@
                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
 
+                    <div class="mb-6">
+                        <x-input-label for="progress" :value="__('Progress Percentage')" />
+                        <div class="flex items-center">
+                            <x-text-input 
+                                id="progress" 
+                                class="block mt-1 w-24" 
+                                type="number" 
+                                name="progress" 
+                                :value="old('progress', $update->progress)" 
+                                min="0" 
+                                max="100" 
+                                placeholder="0"
+                            />
+                            <span class="ml-2 text-gray-600">%</span>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Enter a value between 0 and 100</p>
+                        <x-input-error :messages="$errors->get('progress')" class="mt-2" />
+                    </div>
+
                     <div class="flex items-center justify-end mt-6">
                         <x-primary-button>
                             {{ __('Update') }}

@@ -59,6 +59,7 @@ class UserUpdateController extends Controller
             'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'progress' => 'nullable|integer|min:0|max:100',
             'images' => 'required|array|min:1|max:10',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
             'image_descriptions' => 'required|array|min:1|max:10',
@@ -77,6 +78,7 @@ class UserUpdateController extends Controller
                 'user_id' => $request->user_id,
                 'title' => $request->title,
                 'description' => $request->description,
+                'progress' => $request->progress,
             ]);
 
             // Handle image uploads if files were provided
@@ -128,11 +130,13 @@ class UserUpdateController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'progress' => 'nullable|integer|min:0|max:100',
         ]);
 
         $update->update([
             'title' => $request->title,
             'description' => $request->description,
+            'progress' => $request->progress,
         ]);
 
         // Update image descriptions if provided

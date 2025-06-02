@@ -62,7 +62,7 @@
                 <div class="md:w-1/2">
                     <div class="relative rounded-2xl overflow-hidden shadow-xl aspect-video">
                         @if($services->count() > 0 && $services->first()->image_path)
-                            <img src="{{ asset('storage/' . $services->first()->image_path) }}" alt="{{ $services->first()->title }}" class="w-full h-full object-cover">
+                            <img src="{{ Storage::url($services->first()->image_path) }}" alt="{{ $services->first()->title }}" class="w-full h-full object-cover">
                         @else
                             <img src="https://images.unsplash.com/photo-1556912167-f556f1f39fdf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Home Services" class="w-full h-full object-cover">
                         @endif

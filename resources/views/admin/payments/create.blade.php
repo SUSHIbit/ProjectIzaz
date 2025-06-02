@@ -30,6 +30,18 @@
                         <x-input-error :messages="$errors->get('price')" class="mt-2" />
                     </div>
 
+                    <div class="mb-6">
+                        <x-input-label for="payment_method" :value="__('Payment Method')" />
+                        <select id="payment_method" name="payment_method" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                            @foreach(App\Models\PaymentItem::PAYMENT_METHODS as $value => $label)
+                                <option value="{{ $value }}" {{ old('payment_method') == $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('payment_method')" class="mt-2" />
+                    </div>
+
                     <div class="flex items-center justify-end mt-6">
                         <x-primary-button>
                             {{ __('Create Payment Item') }}
@@ -50,10 +62,17 @@
                         <span class="font-medium">Exact Amount:</span> Specify the exact amount required for the payment.
                     </p>
                     <p>
-                        <span class="font-medium">Follow Up:</span> After creating a payment item, users will be able to see it in their dashboard and upload payment receipts.
+                        <span class="font-medium">Payment Method:</span>
+                        <ul class="list-disc list-inside mt-2">
+                            <li><strong>Cash Payment:</strong> User will upload their payment receipt directly.</li>
+                            <li><strong>Bank Loan:</strong> Lawyer will handle the payment and upload the bank receipt.</li>
+                        </ul>
                     </p>
                     <p>
-                        <span class="font-medium">Verification:</span> Once a user uploads a receipt, you'll need to verify it to complete the payment process.
+                        <span class="font-medium">Follow Up:</span> After creating a payment item, users will be able to see it in their dashboard and upload payment receipts (for cash payments) or wait for lawyer's bank receipt (for bank loans).
+                    </p>
+                    <p>
+                        <span class="font-medium">Verification:</span> Once a receipt is uploaded, you'll need to verify it to complete the payment process.
                     </p>
                 </div>
             </div>

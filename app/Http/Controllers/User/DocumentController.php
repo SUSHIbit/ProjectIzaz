@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
+use App\Models\SignDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -54,15 +55,18 @@ class DocumentController extends Controller
             'signed_document' => 'required|mimes:pdf|max:10240', // 10MB max
         ]);
 
-        // Delete the old signed file if exists
-        if ($document->signed_file_path) {
-            Storage::disk('public')->delete($document->signed_file_path);
-        }
-
+        // Store the new signed file
         $filePath = $request->file('signed_document')->store('documents/signed', 'public');
 
+        // Save the signed document in the sign_documents table
+        SignDocument::create([
+            'document_id' => $document->id,
+            'user_id' => Auth::id(),
+            'file_path' => $filePath,
+        ]);
+
+        // Update the document status only
         $document->update([
-            'signed_file_path' => $filePath,
             'status' => 'signed',
         ]);
 

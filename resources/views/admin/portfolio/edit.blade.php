@@ -58,7 +58,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     @forelse($portfolio->images as $image)
                         <div class="relative group">
-                            <img src="{{ asset('storage/' . $image->image_path) }}" alt="Project image" class="w-full aspect-square object-cover rounded-md">
+                            <img src="{{ Storage::url($image->image_path) }}" alt="Project image" class="w-full aspect-square object-cover rounded-md">
                             <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-all duration-200">
                                 <form action="{{ route('admin.portfolio.images.destroy', $image->id) }}" method="POST" class="hidden group-hover:block">
                                     @csrf
